@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>👑 Admin Panel</h1>
+    <div class="balance">ADMIN</div>
+</header>
+
+<main>
+
+    <section class="profile">
+        <h2>إدارة الحساب</h2>
+        <p>Youssef</p>
+
+        <div class="stats">
+            <div>
+                <strong id="adminBalance">0</strong>
+                <span>الرصيد $</span>
+            </div>
+
+            <div>
+                <strong id="adminFollowers">0</strong>
+                <span>المتابعون </span>
+            </div>
+        </div>
+    </section>
+
+    <section class="actions">
+
+        <button onclick="addMoney()">
+            💵 إضافة رصيد 
+        </button>
+
+        <button onclick="addFollowers()">
+            👥 إضافة متابعين 
+        </button>
+
+        <button onclick="addMillion()">
+            💰 إضافة 1,000,000$ 
+        </button>
+
+        <button onclick="location.href='index.html'">
+            🏠 العودة للحساب
+        </button>
+
+    </section>
+
+</main>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

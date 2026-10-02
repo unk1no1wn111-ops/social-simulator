@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#11141c">
+    <link rel="manifest" href="manifest.json">
+    <title>Social App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Social App</h1>
+    <div class="balance" id="balance">$0</div>
+</header>
+
+<main>
+
+    <section class="profile">
+        <div class="avatar">👤</div>
+
+        <h2 id="name">User</h2>
+        <p id="username">@user</p>
+
+        <div class="stats">
+            <div>
+                <strong id="followers">0</strong>
+                <span>متابعين</span>
+            </div>
+
+            <div>
+                <strong id="posts">0</strong>
+                <span>منشورات</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="actions">
+
+        <button onclick="openChat()">
+            💬 المحادثة
+        </button>
+       <button onclick="location.href='friends.html'">
+                👥 إضافة صديق
+       </button>
+
+        <button onclick="addPost()">
+            ➕ إضافة منشور
+        </button>
+
+        <button onclick="openStore()">
+            🛒 المتجر
+        </button>
+
+        <button onclick="openAdmin()">
+            👑 Admin
+        </button>
+
+        <button id="installButton" onclick="installApp()" style="display:none">
+            📱 تنزيل التطبيق
+        </button>
+
+        <button onclick="changeName()">
+            ✏️ تغيير الاسم
+        </button>
+
+        <button onclick="logout()">
+            🚪 تسجيل الخروج
+        </button>
+
+    </section>
+
+    <section class="notice">
+        <h3>Social App Simulator</h3>
+        <p>
+            منصة اجتماعية تجريبية.
+            الرصيد والخدمات والمتابعون داخل المحاكاة افتراضية.
+        </p>
+    </section>
+
+</main>
+
+<script>
+
+const currentUser = localStorage.getItem("currentUser");
+
+if (!currentUser) {
+    window.location.href = "index.html";
+}
+
+function getUsers() {
+    return JSON.parse(localStorage.getItem("users") || "{}");
+}
+
+function saveUsers(users) {
+    localStorage.setItem("users", JSON.stringify(users));
+}
+
+function loadProfile() {
+
+    const users = getUsers();
+    const user = users[currentUser];
+
+    if (!user) {
+        localStorage.removeItem("currentUser");
+        window.location.href = "index.html";
+        return;
+    }
+
+    document.getElementById("name").textContent =
+        user.name || user.username;
+
+    document.getElementById("username").textContent =
+        "@" + user.username;
+
+    document.getElementById("balance").textContent =
+        "$" + Number(user.balance || 0).toLocaleString();
+
+    document.getElementById("followers").textContent =
+        Number(user.followers || 0).toLocaleString();
+
+    document.getElementById("posts").textContent =
+        Number(user.posts || 0).toLocaleString();
+}
+
+function changeName() {
+
+    const newName = prompt("اكتب الاسم الجديد:");
+
+    if (!newName || !newName.trim()) return;
+
+    const users = getUsers();
+
+    users[currentUser].name = newName.trim();
+
+    saveUsers(users);
+    loadProfile();
+}
+
+function addFriend() {
+    alert("👥 صفحة إضافة الأصدقاء جاهزة للربط بنظام الأصدقاء.");
+}
+
+function addPost() {
+
+    const text = prompt("اكتب منشورك:");
+
+    if (!text || !text.trim()) return;
+
+    const users = getUsers();
+
+    users[currentUser].posts =
+        Number(users[currentUser].posts || 0) + 1;
+
+    saveUsers(users);
+
+    alert("✅ تم إضافة المنشور التجريبي.");
+
+    loadProfile();
+}
+
+function openChat() {
+    window.location.href = "chat.html";
+}
+
+function openStore() {
+    window.location.href = "store.html";
+}
+
+function openAdmin() {
+
+    const code = prompt("🔐 أدخل كود Admin:");
+
+    if (code === "12345") {
+        window.location.href = "admin.html";
+    } else {
+        alert("❌ كود Admin غير صحيح");
+    }
+}
+
+function logout() {
+
+    localStorage.removeItem("currentUser");
+
+    window.location.href = "index.html";
+}
+
+
+/* تثبيت التطبيق */
+
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", function(event) {
+
+    event.preventDefault();
+
+    deferredPrompt = event;
+
+    document.getElementById("installButton").style.display = "block";
+
+});
+
+function installApp() {
+
+    if (!deferredPrompt) {
+
+        alert(
+            "إذا لم يظهر التثبيت، افتح قائمة المتصفح واختر إضافة إلى الشاشة الرئيسية."
+        );
+
+        return;
+    }
+
+    deferredPrompt.prompt();
+
+    deferredPrompt = null;
+}
+
+loadProfile();
+
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("App ready"))
+        .catch(error => console.log(error));
+}
+</script>
+</body>
+</html>

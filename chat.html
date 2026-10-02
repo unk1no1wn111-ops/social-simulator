@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحادثة</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>💬 المحادثة</h1>
+</header>
+
+<main>
+
+    <section class="notice">
+        <h2>محادثة تجريبية</h2>
+        <p>اكتب رسالة وسيتم حفظها على هذا الجهاز.</p>
+    </section>
+
+    <section id="messages" class="notice"></section>
+
+    <section class="actions">
+
+        <input
+            id="messageInput"
+            type="text"
+            placeholder="اكتب رسالتك..."
+        >
+
+        <button onclick="sendMessage()">
+            📤 إرسال
+        </button>
+
+        <button onclick="location.href='home.html'">
+            🏠 الرئيسية
+        </button>
+
+    </section>
+
+</main>
+
+<script>
+
+function loadMessages() {
+
+    const messages =
+        JSON.parse(localStorage.getItem("messages") || "[]");
+
+    const box = document.getElementById("messages");
+
+    box.innerHTML = "";
+
+    messages.forEach(function(message) {
+
+        const p = document.createElement("p");
+
+        p.textContent =
+            message.user + ": " + message.text;
+
+        box.appendChild(p);
+    });
+}
+
+function sendMessage() {
+
+    const input =
+        document.getElementById("messageInput");
+
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    const messages =
+        JSON.parse(localStorage.getItem("messages") || "[]");
+
+    const user =
+        localStorage.getItem("currentUser") || "User";
+
+    messages.push({
+        user: user,
+        text: text
+    });
+
+    localStorage.setItem(
+        "messages",
+        JSON.stringify(messages)
+    );
+
+    input.value = "";
+
+    loadMessages();
+}
+
+loadMessages();
+
+</script>
+
+</body>
+</html>
